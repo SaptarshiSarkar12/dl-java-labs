@@ -23,7 +23,7 @@ Where:
 Implementation of the McCulloch-Pitts neuron in Java can be found in the [MPNeuron.java](MPNeuron.java) file.
 
 ### Tests/Examples
-Example usage and tests for the McCulloch-Pitts neuron can be found in the [MPNeuronTest.java](../../../../test/java/neuralnetworks/perceptron/MPNeuronTest.java) file.
+Example usage and tests for the McCulloch-Pitts neuron can be found in the [MPNeuronTest.java](MPNeuronTest.java) file in `src/test/java/neuralnetworks/perceptron` directory.
 
 ## References
 
