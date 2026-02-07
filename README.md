@@ -19,7 +19,8 @@ To deeply understand what happens under the hood instead of relying on black-box
   - [Linear Algebra](./src/main/java/fundamentals/linearalgebra) - Vectors and Matrices Operations
 - [Neural Networks](./src/main/java/neuralnetworks) - Building blocks of neural networks.
     - [Perceptron](./src/main/java/neuralnetworks/perceptron) - Single-layer neural network implementation.
-        - [McCulloch-Pitts Neuron](./src/main/java/neuralnetworks/perceptron/MPNeuron.java) - Basic binary classifier.
+        - [McCulloch-Pitts Neuron](./src/main/java/neuralnetworks/perceptron/MPNeuron.java) - Basic binary classifier without weights or bias.
+        - [Perceptron](./src/main/java/neuralnetworks/perceptron/Perceptron.java) - Weighted binary classifier with bias.
 
 ## Learning Sources
 - MIT 18.06 Linear Algebra, Spring 2005 (Lecture Videos) by **Gilbert Strang** (YouTube)
