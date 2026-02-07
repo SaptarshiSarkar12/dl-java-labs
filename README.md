@@ -1,5 +1,7 @@
 # Deep Learning From Scratch (Java-first)
 
+[![Test](https://github.com/SaptarshiSarkar12/dl-java-labs/actions/workflows/test.yml/badge.svg)](https://github.com/SaptarshiSarkar12/dl-java-labs/actions/workflows/test.yml)
+
 <img width="1536" height="1024" alt="Project Banner" src="https://github.com/user-attachments/assets/e8c8b6f9-51ea-4eda-8f73-05e90b3eb0b5" />
 
 This repository documents my deep learning journey through:
