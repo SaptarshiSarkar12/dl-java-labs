@@ -22,9 +22,10 @@ To understand what happens under the hood by implementing core concepts manually
 - [Fundamentals](./src/main/java/fundamentals) – Mathematical foundations.
     - [Linear Algebra](./src/main/java/fundamentals/linearalgebra) – Vector and matrix operations.
 - [Neural Networks](./src/main/java/neuralnetworks) – Core neural network models.
-    - [Perceptron](./src/main/java/neuralnetworks/perceptron) – Single-layer neural models.
+    - [Perceptron](./src/main/java/neuralnetworks/perceptron) – Basic building blocks of neural networks.
         - [McCulloch–Pitts Neuron](./src/main/java/neuralnetworks/perceptron/MPNeuron.java) – Binary threshold neuron with inhibitory inputs.
-        - [Perceptron](./src/main/java/neuralnetworks/perceptron/Perceptron.java) – Learnable linear classifier with weights and bias.
+        - [Perceptron](./src/main/java/neuralnetworks/perceptron/Perceptron.java) – Extension of MPNeuron with learnable weights and bias.
+        - [Multi-layer Perceptron](./src/main/java/neuralnetworks/perceptron/MLP.java) – A simple feedforward neural network with one hidden layer.
 
 ## Running Tests
 
