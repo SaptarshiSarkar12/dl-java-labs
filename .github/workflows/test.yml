@@ -23,3 +23,31 @@ jobs:
 
       - name: Run tests
         run: mvn -B test
+      - name: Generate Surefire Summary
+        run: |
+          total=$(grep -o 'tests="[0-9]*"' target/surefire-reports/*.xml | awk -F'"' '{sum+=$2} END {print sum}')
+          failures=$(grep -o 'failures="[0-9]*"' target/surefire-reports/*.xml | awk -F'"' '{sum+=$2} END {print sum}')
+          errors=$(grep -o 'errors="[0-9]*"' target/surefire-reports/*.xml | awk -F'"' '{sum+=$2} END {print sum}')
+          skipped=$(grep -o 'skipped="[0-9]*"' target/surefire-reports/*.xml | awk -F'"' '{sum+=$2} END {print sum}')
+          
+          echo "### ✅ Maven Surefire Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Total | Failures | Errors | Skipped |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|----------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| $total | $failures | $errors | $skipped |" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$failures" -gt 0 ] || [ "$errors" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Failed Tests" >> $GITHUB_STEP_SUMMARY
+            echo "| Class | Method | Message |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          
+            for f in target/surefire-reports/*.xml; do
+              xmllint --xpath '//testcase[failure|error]' "$f" 2>/dev/null | \
+              sed 's/></>\n</g' | grep "<testcase" | while read -r line; do
+                classname=$(echo "$line" | sed -n 's/.*classname="\([^"]*\)".*/\1/p')
+                name=$(echo "$line" | sed -n 's/.*name="\([^"]*\)".*/\1/p')
+                message=$(echo "$line" | sed -n 's/.*message="\([^"]*\)".*/\1/p')
+                echo "| $classname | $name | $message |" >> $GITHUB_STEP_SUMMARY
+              done
+            done
+          fi
