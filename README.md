@@ -26,6 +26,8 @@ To understand what happens under the hood by implementing core concepts manually
         - [McCulloch–Pitts Neuron](./src/main/java/neuralnetworks/perceptron/MPNeuron.java) – Binary threshold neuron with inhibitory inputs.
         - [Perceptron](./src/main/java/neuralnetworks/perceptron/Perceptron.java) – Extension of MPNeuron with learnable weights and bias.
         - [Multi-layer Perceptron](./src/main/java/neuralnetworks/perceptron/MLP.java) – A simple feedforward neural network with one hidden layer.
+- [Utilities](./src/main/java/utils) – Helper classes and functions for data operations, activation functions, etc.
+  - [SIMD Matrix Operations](./src/main/java/utils/SimdMatrix.java) - Optimized matrix operations using SIMD instructions for improved performance.
 
 ## Running Tests
 

@@ -31,9 +31,9 @@ public class SimdMatrixTest {
     }
 
     @Test
-    @DisplayName("Verify SIMD MatMul correctness against Naive Loop")
-    public void testSimdMatrixMultiplicationCorrectness() {
-        int m = 1024;
+    @DisplayName("Test SIMD Matrix Multiplication Against Naive Implementation")
+    public void testSimdMatrixMultiplication() {
+        int m = 2048;
         int n = 512;
         int p = 1024;
 
