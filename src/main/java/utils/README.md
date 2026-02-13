@@ -11,3 +11,6 @@ The `SimdMatrix` class provides optimized matrix operations using SIMD (Single I
 - **Element-wise Operations**: Supports element-wise addition, subtraction, and other operations optimized for performance.
 
 > **Note**: Ensure that your system supports SIMD instructions to take full advantage of the performance benefits provided by this class.
+
+### Testing
+The `SimdMatrixTest.java` file in the `src/test/java/utils` directory contains unit tests to verify the correctness of the SIMD matrix operations. It includes tests for matrix multiplication and comparison against standard matrix operations to ensure accuracy.
