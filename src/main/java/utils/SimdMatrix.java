@@ -30,7 +30,7 @@ public class SimdMatrix {
      * This method multiplies this matrix (A) with another matrix (B) and returns the result (C).
      * It uses SIMD vectorization for the innermost loop to optimize performance.
      * In the innermost loop, we always walk across contiguous memory of B’s row and C’s row. This is cache-friendly.
-     * @param other The matrix to multiply with this matrix. Must have shape (cols of this, any).
+     * @param other The matrix to multiply with this matrix. Must have shape (columns of this, any).
      * @return A new SimdMatrix that is the result of multiplying this matrix with the other matrix.
      */
     public SimdMatrix matmul(SimdMatrix other) {
@@ -92,8 +92,8 @@ public class SimdMatrix {
 
     /**
      * Broadcast Add (Bias Addition).
-     * Adds a bias vector (1 x cols) to every row of this matrix.
-     * @param vector The bias vector to add. Must have shape (1, cols).
+     * Adds a bias vector (1 x columns) to every row of this matrix.
+     * @param vector The bias vector to add. Must have shape (1, columns).
      * @return A new SimdMatrix where the bias vector has been added to each row of this matrix.
      */
     public SimdMatrix addRowVector(SimdMatrix vector) {
@@ -255,6 +255,14 @@ public class SimdMatrix {
             m.data[i] = (float) (r.nextGaussian() * 0.1f);
         }
         return m;
+    }
+
+    public int rows() {
+        return rows;
+    }
+
+    public int columns() {
+        return cols;
     }
 
     @Override

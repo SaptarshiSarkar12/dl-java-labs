@@ -2,21 +2,20 @@ package neuralnetworks.perceptron;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.SimdMatrix;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Perceptron {
     private static final Logger logger = LoggerFactory.getLogger(Perceptron.class);
-    private final double[][] inputs; // input[][0] is bias input (always 1)
+    private final float[][] inputs; // input[][0] is bias input (always 1)
     private final int[] outputs; // output values: 0 or 1
-    private double[] weights; // w[0] is bias weight (= -threshold)
-    private final double learningRate;
+    private SimdMatrix weights; // w[0] is bias weight (= -threshold)
+    private final float learningRate;
 
-    public Perceptron(double[][] inputs, int[] outputs, double learningRate) {
+    public Perceptron(float[][] inputs, int[] outputs, float learningRate) {
         if (inputs.length != outputs.length) {
             throw new IllegalArgumentException("Number of input samples must match number of output samples.");
         }
@@ -27,6 +26,7 @@ public class Perceptron {
     }
 
     public boolean train(int maxEpochs) {
+        int columns = inputs[0].length; // Number of features (including bias)
         int epoch = 0;
         boolean converged = false;
         // A list of indices (0 to inputs.length-1) that we will shuffle each epoch for random order training
@@ -38,10 +38,10 @@ public class Perceptron {
             Collections.shuffle(indices); // Shuffle indices to ensure random order of training samples each epoch
 
             for (int i : indices) {
-                double[] x = inputs[i];
+                SimdMatrix xVector = new SimdMatrix(1, columns, inputs[i]);
                 int y = outputs[i];
 
-                double dotProduct = getDotProduct(x, weights);
+                double dotProduct = getDotProduct(xVector, weights);
                 int predicted = stepFunction(dotProduct);
 
                 // Standard update rule: w = w + learningRate * (y - predicted) * x
@@ -50,28 +50,28 @@ public class Perceptron {
                 // If y == 0 and predicted == 1, we need to subtract x from weights (multiplier = -1)
                 int error = y - predicted;
                 if (error != 0) {
-                    updateWeights(weights, x, error); // error is +1 or -1, so it will add or subtract x from weights
+                    updateWeights(weights, xVector, error); // error is +1 or -1, so it will add or subtract x from weights
                     converged = false; // If we had to update weights, we are not yet converged
-                    logger.debug("Epoch {}: Update triggered. Input: {}, Error: {}", epoch, Arrays.toString(x), error);
+                    logger.debug("Epoch {}: Update triggered. Input: {}, Error: {}", epoch, xVector, error);
                 }
             }
             epoch++;
-
         }
         if (converged) {
-            logger.info("Training converged successfully after {} epochs.", epoch);
-            logger.debug("Trained weights: {}", Arrays.toString(weights));
+            logger.info("Training converged successfully after {} epochs.", epoch - 2); // Subtract 2 because we increment epoch at the end of the loop, so it will be 1 more than the actual last epoch where we had convergence
+            logger.debug("Trained weights: {}", weights);
         } else {
-            logger.warn("Training failed to converge after {} epochs.", epoch);
+            logger.warn("Training failed to converge after {} epochs.", maxEpochs);
         }
         return converged;
     }
 
-    public int predict(double[] input) {
-        if (input.length != weights.length) {
+    public int predict(float[] input) {
+        if (input.length != weights.columns()) {
             throw new IllegalArgumentException("Input size does not match weight size.");
         }
-        double dotProduct = getDotProduct(input, weights);
+        SimdMatrix inputVec = new SimdMatrix(1, input.length, input);
+        double dotProduct = getDotProduct(inputVec, weights);
         return stepFunction(dotProduct);
     }
 
@@ -83,31 +83,20 @@ public class Perceptron {
         }
     }
 
-    private void updateWeights(double[] weights, double[] x, int multiplier) {
+    private void updateWeights(SimdMatrix weights, SimdMatrix x, int multiplier) {
         // multiplier is +1 if we need to add x to weights, -1 if we need to subtract x from weights
-        for (int i = 0; i < weights.length; i++) {
-            weights[i] += learningRate * multiplier * x[i];
-        }
+        this.weights = weights.addRowVector(x.scale(learningRate * multiplier));
     }
 
-    public double getDotProduct(double[] inputs, double[] weights) {
-        if (inputs.length != weights.length) {
+    public float getDotProduct(SimdMatrix inputs, SimdMatrix weights) {
+        if (inputs.columns() != weights.columns()) {
             throw new IllegalArgumentException("Input size does not match weight size.");
         }
-        double sum = 0.0;
-        for (int i = 0; i < inputs.length; i++) {
-            sum += weights[i] * inputs[i];
-        }
-        return sum;
+        return weights.elementMult(inputs).sum();
     }
 
     public void initializeWeights() {
-        this.weights = new double[inputs[0].length];
-        Random rand = new Random();
-        // Initialize weights to symmetric random values between -0.01 and 0.01 (small random values around zero)
-        for (int i = 0; i < weights.length; i++) {
-            weights[i] = (rand.nextDouble() * 0.02) - 0.01; // Random value in range [-0.01, 0.01]
-        }
-        logger.debug("Weights initialized to: {}", Arrays.toString(weights));
+        this.weights = SimdMatrix.random(1, inputs[0].length);
+        logger.debug("Weights initialized to: {}", weights);
     }
 }
